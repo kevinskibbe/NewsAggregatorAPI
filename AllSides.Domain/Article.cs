@@ -12,5 +12,7 @@ namespace AllSides.Domain
         public string Headline { get; set; }
         public string Link { get; set; }
         public DateTime Dateline { get; set; }
+        public string ImageUri { get; set; }
+        public string Summary { get; set; }
     }
 }

@@ -175,5 +175,17 @@ namespace AllSides.Tests
                 Assert.IsTrue(countOfArticlesFromSource <= 20 / 2);
             }
         }
+
+        [TestMethod]
+        public void EnsureSummaryIsNotNullAndIsValid()
+        {
+            ArticleService articleService = new ArticleService();
+            List<Article> articles = articleService.GetArticles(Viewpoint.Right, Category.World, 20);
+            
+            foreach (Article article in articles)
+            {
+                Assert.IsFalse(String.IsNullOrWhiteSpace(article.Summary));
+            }
+        }
     }
 }
