@@ -6,7 +6,7 @@ using AllSides.Services;
 using AllSides.Domain.Enums;
 using AllSides.API.Controllers;
 using System.Web.Http;
-
+using System.Linq;
 namespace AllSides.Tests
 {
     [TestClass]
@@ -113,10 +113,66 @@ namespace AllSides.Tests
             {
                 if (previousDate.HasValue)
                 {
-                    Assert.IsTrue(DateTime.Compare(previousDate.Value, article.Dateline) == 1);
+                    Assert.IsTrue(DateTime.Compare(previousDate.Value, article.Dateline) >= 0);
                 }
 
                 previousDate = article.Dateline;
+            }
+        }
+
+        [TestMethod]
+        public void EnsureNoSourceIsMoreThanHalfOfArticlesWithTenLeftWorld()
+        {
+            ArticleService articleService = new ArticleService();
+            List<Article> articles = articleService.GetArticles(Viewpoint.Left, Category.World, 10);
+            List<Source> sources = articles.GroupBy(s => s.Source.Outlet).Select(a => a.First().Source).ToList();
+
+            foreach (Source source in sources)
+            {
+                int countOfArticlesFromSource = articles.Where(a => a.Source.Outlet == source.Outlet).Count();
+                Assert.IsTrue(countOfArticlesFromSource <= 10 / 2);
+            }
+        }
+
+        [TestMethod]
+        public void EnsureNoSourceIsMoreThanHalfOfArticlesWithTwentyLeftWorld()
+        {
+            ArticleService articleService = new ArticleService();
+            List<Article> articles = articleService.GetArticles(Viewpoint.Left, Category.World, 20);
+            List<Source> sources = articles.GroupBy(s => s.Source.Outlet).Select(a => a.First().Source).ToList();
+
+            foreach (Source source in sources)
+            {
+                int countOfArticlesFromSource = articles.Where(a => a.Source.Outlet == source.Outlet).Count();
+                Assert.IsTrue(countOfArticlesFromSource <= 20 / 2);
+            }
+        }
+
+        [TestMethod]
+        public void EnsureNoSourceIsMoreThanHalfOfArticlesWithTenRightWorld()
+        {
+            ArticleService articleService = new ArticleService();
+            List<Article> articles = articleService.GetArticles(Viewpoint.Right, Category.World, 10);
+            List<Source> sources = articles.GroupBy(s => s.Source.Outlet).Select(a => a.First().Source).ToList();
+
+            foreach (Source source in sources)
+            {
+                int countOfArticlesFromSource = articles.Where(a => a.Source.Outlet == source.Outlet).Count();
+                Assert.IsTrue(countOfArticlesFromSource <= 10 / 2);
+            }
+        }
+
+        [TestMethod]
+        public void EnsureNoSourceIsMoreThanHalfOfArticlesWithTwentyRightWorld()
+        {
+            ArticleService articleService = new ArticleService();
+            List<Article> articles = articleService.GetArticles(Viewpoint.Right, Category.World, 20);
+            List<Source> sources = articles.GroupBy(s => s.Source.Outlet).Select(a => a.First().Source).ToList();
+
+            foreach (Source source in sources)
+            {
+                int countOfArticlesFromSource = articles.Where(a => a.Source.Outlet == source.Outlet).Count();
+                Assert.IsTrue(countOfArticlesFromSource <= 20 / 2);
             }
         }
     }

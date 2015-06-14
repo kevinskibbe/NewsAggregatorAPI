@@ -32,7 +32,7 @@ namespace AllSides.Services
 
             foreach(Source source in sources)
             {
-                List<Article> articlesFromSource = _rssReader.GetArticles(source.Uri, count);
+                List<Article> articlesFromSource = _rssReader.GetArticles(source.Uri, (count / 2)); // no source should make up more than half the articles
                 articlesFromSource.ForEach(x => x.Source = source);
                 results.AddRange(articlesFromSource);
             }
